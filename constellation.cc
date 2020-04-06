@@ -25,49 +25,6 @@ PositionCall (Ptr<const Node> node, uint32_t tmp_sat)
               << plane_th << ", " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
 }
 
-// Check for fifth links
-static void FifthLink(Constellation* netWork, uint32_t tmp_sat)
-{   
-    uint32_t count = 0;
-
-    linkInfo satLink = netWork->get_fifthISL ();
-    std::vector<Vector> link = satLink.link_pos;
-    std::vector<uint32_t> dex = satLink.link_dex;
-    
-    std::cout << std::endl;
-    std::cout << std::endl << "fifth link position" << std::endl;
-    for (uint i = 0; i < link.size(); i++)
-    {
-        // source satellite
-        // uint32_t curPlane = i/tmp_sat + 1;
-        // uint32_t curSat = tmp_sat - (tmp_sat*curPlane - (i+1));
-        // linked satellite
-        // uint32_t plane = dex[i]/tmp_sat + 1;
-        // uint32_t sat = tmp_sat - (tmp_sat*plane - (dex[i]+1));
-
-        // time, source satellite, linked longitude, linked latitude, linked altitude, linked satellite
-        // if (dex[i] != i)
-        //     std::cout << "t = " << Simulator::Now().GetSeconds() << "s" << ", "  << curPlane << "/" << curSat << ", " 
-        //               << link[i].x << ", " << link[i].y << ", " << link[i].z << ", " << plane << "/" << sat << std::endl;
-
-        if (dex[i] != i)
-            std::cout << "t = " << Simulator::Now().GetSeconds() << "s" << ", "  << i << ", " 
-                      << link[i].x << ", " << link[i].y << ", " << link[i].z << ", " << dex[i] << std::endl;
-        // print "NO" at the end if no 5th link connection
-        else
-        {
-            // std::cout << "t = " << Simulator::Now().GetSeconds() << "s" << ", "  << curPlane << "/" << curSat << ", " 
-            //           << link[i].x << ", " << link[i].y << ", " << link[i].z << ", " << plane << "/" << sat << "\t\t NO" << std::endl;
-
-            std::cout << "t = " << Simulator::Now().GetSeconds() << "s" << ", "  << i << ", " 
-                      << link[i].x << ", " << link[i].y << ", " << link[i].z << ", " << dex[i] << "\t\t NO" << std::endl;
-            count++;
-        }
-    }
-    std::cout << std::endl << "Number of no 5th link: " << count << std::endl;
-}
-//
-
 // Routing check
 static void RoutingCheck(Constellation* netWork, uint32_t sat_source, uint32_t sat_tar)
 {
@@ -113,15 +70,11 @@ int main (int argc, char *argv[])
     MobilityHelper mobility;
     mobility.Install (satellite);
 
-    // SatPosition satNetWork (alt, inc, nPlane, nSat);
-    // SetSatPos (&satellite, &satNetWork);
-
     Constellation satNetWork (alt, inc, nPlane, nSat);
     satNetWork.SetSatPos (&satellite);
     satNetWork.SetISL ();
-    //satNetWork.Routing ();
 
-    // Create ISL
+    // Create first four ISL
     // PointToPointHelper pointToPoint;
     // for (uint32_t i = 0; i < nPlane*nSat; i++)
     //     for (uint32_t j = i + 1; j < nPlane*nSat; j++)
@@ -160,9 +113,6 @@ int main (int argc, char *argv[])
         Ptr<Node> tmp_node = (*iter);
         Simulator::Schedule (Seconds(watchTime), &PositionCall, tmp_node, nSat);
     }
-
-    // Check for fifth links
-    Simulator::Schedule (Seconds(watchTime), &FifthLink, &satNetWork, nSat);
 
     // Check for shortest path
     Simulator::Schedule (Seconds(watchTime), &RoutingCheck, &satNetWork, source, target);

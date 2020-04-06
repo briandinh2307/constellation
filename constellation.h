@@ -327,17 +327,19 @@ void Constellation::Routing (uint32_t source, uint32_t target)
     }
 
     if (source != target)
-        std::cout << "Routing from satellite " << target << " to satellite " << source << std::endl;
-
-    for (uint32_t i = 0; i <= counter; i++)
     {
-        if (i == 0)
-            std::cout << "distance\t" << "target\t";
-        else if (i == counter)
-            std::cout << "source" << std::endl;
-        else
-            std::cout << "sat " << i << "\t";
+        std::cout << std::endl << "Routing from satellite " << target << " to satellite " << source << std::endl;
+        for (uint32_t i = 0; i <= counter; i++)
+        {
+            if (i == 0)
+                std::cout << "distance\t" << "target\t";
+            else if (i == counter)
+                std::cout << "source" << std::endl;
+            else
+                std::cout << "sat " << i << "\t";
+        }
     }
+    
     
     u = target;
     if (u != source)
@@ -394,13 +396,6 @@ linkInfo Constellation::dijkstra(std::vector<std::vector<double> > graph, uint32
                 preNode.link_dex[v] = u;                            // Update previous node for that node
             }
 	}
-
-	// std::cout << "Satellite\t\tDistance from source" << std::endl;
-	// for(uint32_t i = 0; i < nPlane*nSat; i++)                       /*will print the vertex with their distance from the source to the console */
-	// {
-	// 	// uint32_t t = 0;
-	// 	std::cout << i << "\t\t\t"<< preNode.link_dist[i] << std::endl;
-	// }
 
     return preNode;
 }

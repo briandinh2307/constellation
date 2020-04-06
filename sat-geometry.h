@@ -35,8 +35,6 @@ public:
 	double get_longitude (Coordinate);
 	double get_radius (Coordinate a) { return a.r; }
 	double get_altitude (Coordinate);
-	// static double check_elevation(Coordinate, Coordinate, double);
-	// static int are_satellites_mutually_visible(Coordinate, Coordinate);
 
 protected: 
 	// Define "command" appropriately if you want OTcl access to this class
